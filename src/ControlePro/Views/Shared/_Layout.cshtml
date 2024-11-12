@@ -1,0 +1,89 @@
+﻿@using ControlePro.Services
+
+@inject IUserService userService;
+
+@{
+    var title = ViewData["Title"] as string;
+    if (!string.IsNullOrEmpty(title))
+        title = $"{title} - ControlePro";
+    else
+        title = "ControlePro";
+}
+
+<!DOCTYPE html>
+<html data-bs-theme="dark" lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@title</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ControlePro.styles.css" asp-append-version="true" />
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body class="m-0">
+    <div class="d-flex flex-column" style="min-height: 100vh">
+        <header class="shadow-sm py-3 border-bottom">
+            <div class="container d-flex justify-content-between align-items-center">
+                <a href="/" class="text-dark">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="white" class="bi bi-house-fill" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6zm5-.793V6l-2-2V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5z" />
+                        <path fill-rule="evenodd" d="M7.293 1.5a1 1 0 0 1 1.414 0l6.647 6.646a.5.5 0 0 1-.708.708L8 2.207 1.354 8.854a.5.5 0 1 1-.708-.708L7.293 1.5z" />
+                    </svg>
+                </a>
+
+                @if (userService.CurrentUser.Id == 0)
+                {
+
+                    <div class="btn-group">
+                        @Html.ActionLink("Entrar", "Signin", "Usuario", null, new { @class = "btn btn-outline-primary"})
+                        @Html.ActionLink("Cadastrar-se", "Signup", "Usuario", null, new { @class = "btn btn-primary"})
+                    </div>
+                }
+                else
+                {
+                    <div class="d-flex gap-2" role="group">
+                        @Html.ActionLink("Funcionários", "Index", "Funcionarios", null, new { @class = "btn btn-primary"})
+                        @Html.ActionLink("Clientes", "Index", "Clientes", null, new { @class = "btn btn-primary"})
+                        @Html.ActionLink("Fornecedores", "Index", "Fornecedores", null, new { @class = "btn btn-primary"})
+                        @Html.ActionLink("Produtos", "Index", "Produtos", null, new { @class = "btn btn-primary"})
+                   
+                    
+                        <div class="btn-group">
+                            @Html.ActionLink("Vendas", "Index", "Vendas", null, new { @class = "btn btn-primary"})
+                            <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                            <div class="dropdown-menu">
+                                @Html.ActionLink("Orçamentos", "Index", "Vendas", new { status = "orcamento" }, new { @class = "dropdown-item"})
+                                @Html.ActionLink("Em Aberto", "Index", "Vendas", new { status = "emaberto" }, new { @class = "dropdown-item"})
+                                @Html.ActionLink("Finalizadas", "Index", "Vendas", new { status = "finalizada" }, new { @class = "dropdown-item"})
+                                @Html.ActionLink("Canceladas", "Index", "Vendas", new { status = "cancelada" }, new { @class = "dropdown-item"})
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        @Html.ActionLink("Sair", "signout", "Usuario", null, new { @class = "btn btn-outline-primary", @style = "min-width: 80px"})
+                    </div>
+                }
+            </div>
+        </header>
+
+        <div class="container my-3" style="flex: 1 1 auto; display:grid">
+            @RenderBody()
+        </div>
+
+        <footer class="shadow-lg py-3 border-top">
+            <p class="text-center m-0 text-monospace">©@DateTime.Now.Year ControlePro</p>
+        </footer>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
